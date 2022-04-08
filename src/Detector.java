@@ -6,6 +6,10 @@ import java.awt.image.BufferedImage;
 public abstract class Detector{
 	public int count = 0;
 	
+	/**
+	 * To configure a new pattern: Relative pixels with y > 0 must match the color of the rest of the pixels with y > 0.
+	 * Relative pixels with -(y) must be a color different to the pixels with y > 0
+	 */
 	public final int[][][] AMONGUS_TYPES = {
 		// ▓▓▓
 		//▓▓▒▒
@@ -78,10 +82,18 @@ public abstract class Detector{
 		
 	};
 	protected BufferedImage bi;
+	/**
+	 * This class detects amongus pixelsize in images and generates an image with the rest of pixels in almost pure black
+	 * @param bi image in the format of {@link java.awt.image.BufferedImage BufferedImage}
+	 */
 	public Detector(BufferedImage bi) {
 		this.bi = bi;
 	}
-	Color detected = new Color(15, 15, 15);
+	public static final Color detected = new Color(15, 15, 15);
+	/**
+	 * This function detects and genererates the image where the amongus are the only thing not turned into black
+	 * @return the image with the amongus isolated
+	 */
 	protected BufferedImage detectAndGen() {
 		count = 0;
 		BufferedImage out = new BufferedImage(bi.getColorModel(), bi.copyData(null), bi.isAlphaPremultiplied(), null);	
@@ -99,7 +111,7 @@ public abstract class Detector{
 				count++;
 				for(int[] i:AMONGUS_TYPES[amongus]) {
 					try {
-						out.setRGB(i[0]+x, i[1]+y, detected.getRGB());
+						out.setRGB(i[0]+x, Math.abs(i[1])+y, detected.getRGB());
 					}catch(ArrayIndexOutOfBoundsException e1) {
 					}
 				}
@@ -116,15 +128,37 @@ public abstract class Detector{
 			}
 		return out;
 	}
+	/**
+	 * Detects the pattern in a patch of the image
+	 * @param offsetX the x from where the algorithm starts
+	 * @param offsetY the y from where the algorithm starts
+	 * @param positions all the relative positions to check. Format: y>0 = must equal the rest; y<0 = -y must not equal the ones with y>0
+	 * @param in image to check
+	 * @return true if it equals the pattern
+	 */
 	protected boolean detect(int offsetX, int offsetY, int[][] positions, BufferedImage in) {
+		return detect(offsetX, offsetY, positions, in, 0);
+	}
+	/**
+	 * Detects the pattern in a patch of the image
+	 * @param offsetX the x from where the algorithm starts
+	 * @param offsetY the y from where the algorithm starts
+	 * @param positions all the relative positions to check. Format: y>0 = must equal the rest; y<0 = -y must not equal the ones with y>0
+	 * @param in image to check
+	 * @param error quantity of allowed unmatching pixels
+	 * @return true if it equals the pattern with less or equal the quantity of errors given
+	 */
+	protected boolean detect(int offsetX, int offsetY, int[][] positions, BufferedImage in, int error) {
 		try {
 			int color = in.getRGB(offsetX + positions[0][0], offsetY + positions[0][0]);
 			if(new Color(color).equals(detected))return false;
 			for(int[] i : positions)
 				if(i[1] >= 0 && in.getRGB(i[0]+offsetX, i[1]+offsetY) != color) {
-					return false;
-				}else if(i[1] < 0 && in.getRGB(i[0]+offsetX, Math.abs(i[1])+offsetY) == color)
-					return false;
+					error--;
+				}else if(i[1] < 0 && in.getRGB(i[0]+offsetX, Math.abs(i[1])+offsetY) == color) {
+					error --;
+				}
+					if(error == -1)return false;
 			return true;
 		}catch(ArrayIndexOutOfBoundsException e) {
 			return false;

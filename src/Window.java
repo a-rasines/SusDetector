@@ -1,5 +1,6 @@
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -77,6 +78,9 @@ public class Window extends JFrame{
 		contentPane.add(exportButton);
 		
 		setVisible(true);
+		setMinimumSize(new Dimension(700, 80));
+		setResizable(false);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 }
