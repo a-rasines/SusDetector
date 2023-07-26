@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public abstract class Detector{
@@ -17,11 +15,11 @@ public abstract class Detector{
 		//▓▓▓▓
 		// ▓ ▓
 		{
-			   {1,0}, {2,0}, {3,0}, 
-		{0,1}, {1,1},                         {2,-1},{3,-1}, 
+			   {1,0}, {2,0}, {3,0}, 		  {-1,-1},
+		{0,1}, {1,1},                         {2,-2},{3,-2}, 
 		{0,2}, {1,2}, {2,2}, {3,2},
 		{0,3}, {1,3}, {2,3}, {3,3},
-			   {1,4}, 		 {3,4}
+			   {1,4}, 		 {3,4},			  {-1,-5},{-3,-5}
 		},
 		// ▓▓▓
 		//▓▓▒▒
@@ -29,21 +27,21 @@ public abstract class Detector{
 		// ▓▓▓
 		// ▓ ▓
 		{
-				   {1,0}, {2,0}, {3,0}, 
-			{0,1}, {1,1},                              {2,-1},{3,-1},
+				   {1,0}, {2,0}, {3,0}, 			   {-1,-1},                
+			{0,1}, {1,1},                              {2,-2},{3,-2},
 			{0,2}, {1,2}, {2,2}, {3,2}, 
-				   {1,3}, {2,3}, {3,3}, 
-				   {1,4}, 		 {3,4}
+				   {1,3}, {2,3}, {3,3}, 			   {-1,-4},
+				   {1,4}, 		 {3,4},				   {-1,-5},{-3,-5}
 		},
 		// ▓▓▓
 		//▓▓▒▒
 		//▓▓▓▓
 		// ▓ ▓
 		{
-				   {1,0}, {2,0}, {3,0}, 
-			{0,1}, {1,1},                             {2,-1},{3,-1},
+				   {1,0}, {2,0}, {3,0}, 			  {-1,-1},
+			{0,1}, {1,1},                             {2,-2},{3,-2},
 			{0,2}, {1,2}, {2,2}, {3,2}, 
-				   {1,3}, 		 {3,3}
+				   {1,3}, 		 {3,3},               {-1,-4},{-3,-4}
 		},
 		//▓▓▓
 		//▒▒▓▓
@@ -51,11 +49,11 @@ public abstract class Detector{
 		//▓▓▓▓
 		//▓ ▓
 		{
-			{0,0},{1,0},{2,0},              {0,-1},{1,-1},
-						{2,1},{3,1},
+			{0,0},{1,0},{2,0},							{-4,-1},
+						{2,1},{3,1},					{0,-2},{1,-2},
 			{0,2},{1,2},{2,2},{3,2},
 			{0,3},{1,3},{2,3},{3,3},
-			{0,4},		{2,4}
+			{0,4},		{2,4},							{-2,-4},{-4,-5}
 		},
 		//▓▓▓
 		//▒▒▓▓
@@ -63,21 +61,21 @@ public abstract class Detector{
 		//▓▓▓
 		//▓ ▓
 		{
-			{0,0},{1,0},{2,0},                 {0,-1}, {1,-1},
-						{2,1},{3,1},
+			{0,0},{1,0},{2,0},					{-4,-1},
+						{2,1},{3,1},			{0,-2}, {1,-2},
 			{0,2},{1,2},{2,2},{3,2},
-			{0,3},{1,3},{2,3},
-			{0,4},		{2,4}
+			{0,3},{1,3},{2,3},					{-4,-4},
+			{0,4},		{2,4},					{-2,-5},{-4,-5}
 		},
 		//▓▓▓
 		//▒▒▓▓
 		//▓▓▓▓
 		//▓ ▓
 		{
-			{0,0},{1,0},{2,0},               {0,-1}, {3,-1},
-						{2,1},{3,1},
+			{0,0},{1,0},{2,0},               	{-4,-1},
+						{2,1},{3,1},			{0,-2}, {1,-2},
 			{0,2},{1,2},{2,2},{3,2},
-			{0,3},		{2,3}
+			{0,3},		{2,3},					{-2,-4},{-4,-4}
 		}
 		
 	};
@@ -107,11 +105,12 @@ public abstract class Detector{
 					}
 				}
 				if (amongus == -1) continue;
-				System.out.println(String.valueOf(x) + ":" + String.valueOf(y));
+				System.out.println(String.valueOf(x) + ":" + String.valueOf(y) + " -> " + amongus);
 				count++;
 				for(int[] i:AMONGUS_TYPES[amongus]) {
 					try {
-						out.setRGB(i[0]+x, Math.abs(i[1])+y, detected.getRGB());
+						if(i[0] >= 0 || i[1] >= 0)
+							out.setRGB(i[0] < 0?-i[0] - 1 + x: i[0] + x, i[1] < 0? -i[1] - 1 + y : i[1] + y, detected.getRGB());
 					}catch(ArrayIndexOutOfBoundsException e1) {
 					}
 				}
@@ -137,7 +136,7 @@ public abstract class Detector{
 	 * @return true if it equals the pattern
 	 */
 	protected boolean detect(int offsetX, int offsetY, int[][] positions, BufferedImage in) {
-		return detect(offsetX, offsetY, positions, in, 0);
+		return detect(offsetX, offsetY, positions, in, 1);
 	}
 	/**
 	 * Detects the pattern in a patch of the image
@@ -145,20 +144,36 @@ public abstract class Detector{
 	 * @param offsetY the y from where the algorithm starts
 	 * @param positions all the relative positions to check. Format: y>0 = must equal the rest; y<0 = -y must not equal the ones with y>0
 	 * @param in image to check
-	 * @param error quantity of allowed unmatching pixels
+	 * @param error quantity of allowed unmatching pixels (pixels that should not match automatically disqualify the amongus)
 	 * @return true if it equals the pattern with less or equal the quantity of errors given
 	 */
 	protected boolean detect(int offsetX, int offsetY, int[][] positions, BufferedImage in, int error) {
 		try {
-			int color = in.getRGB(offsetX + positions[0][0], offsetY + positions[0][0]);
+			int color;
+			getcolor: {
+				for(int[] pos : positions)
+					if(pos[0] >= 0 && pos[1] >= 0) {
+						color = in.getRGB(offsetX + pos[0], offsetY + pos[1]);
+						break getcolor;
+					}
+				return false;
+			}
 			if(new Color(color).equals(detected))return false;
-			for(int[] i : positions)
-				if(i[1] >= 0 && in.getRGB(i[0]+offsetX, i[1]+offsetY) != color) {
+			for(int[] i : positions) {
+				if((i[0] >= 0 && i[1] >= 0 && in.getRGB(i[0]+offsetX, i[1]+offsetY) != color)) {
+					if(offsetX == 2090 && offsetY == 1066)
+						System.err.println(i[0] + "," + i[1] + " (" +in.getRGB(i[0]+offsetX, i[1]+offsetY) + "), ("+color+")");
 					error--;
-				}else if(i[1] < 0 && in.getRGB(i[0]+offsetX, Math.abs(i[1])+offsetY) == color) {
-					error --;
+				}else if(
+					(i[0] <  0 && i[1] >= 0 && in.getRGB(-i[0] - 1 + offsetX, i[1] + offsetY) == color) ||
+					(i[1] <  0 && i[0] >= 0 && in.getRGB(i[0] + offsetX, -i[1] - 1 + offsetY) == color) ||
+					(i[0] <  0 && i[1] <  0 && in.getRGB(-i[0] - 1 + offsetX, -i[1] - 1 +offsetY) == color)) {
+					if(offsetX == 2090 && offsetY == 1066)
+						System.err.println("a "+i[0] + "," + i[1]);
+					return false;
 				}
-					if(error == -1)return false;
+				if(error == -1)return false;
+			}
 			return true;
 		}catch(ArrayIndexOutOfBoundsException e) {
 			return false;
