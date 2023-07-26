@@ -76,7 +76,75 @@ public abstract class Detector{
 						{2,1},{3,1},			{0,-2}, {1,-2},
 			{0,2},{1,2},{2,2},{3,2},
 			{0,3},		{2,3},					{-2,-4},{-4,-4}
-		}
+		},
+		// ▓▓▓
+		//▓▓▓▒
+		//▓▓▓▓
+		//▓▓▓▓
+		// ▓ ▓
+		{
+			   {1,0}, {2,0}, {3,0}, 		  {-1,-1},
+		{0,1}, {1,1}, {2,1},				  {3,-2}, 
+		{0,2}, {1,2}, {2,2}, {3,2},
+		{0,3}, {1,3}, {2,3}, {3,3},
+			   {1,4}, 		 {3,4},			  {-1,-5},{-3,-5}
+		},
+				// ▓▓▓
+				//▓▓▓▒
+				//▓▓▓▓
+				// ▓▓▓
+				// ▓ ▓
+				{
+						   {1,0}, {2,0}, {3,0}, 			   {-1,-1},                
+					{0,1}, {1,1}, {2,1},                       {3,-2},
+					{0,2}, {1,2}, {2,2}, {3,2}, 
+						   {1,3}, {2,3}, {3,3}, 			   {-1,-4},
+						   {1,4}, 		 {3,4},				   {-1,-5},{-3,-5}
+				},
+				// ▓▓▓
+				//▓▓▓▒
+				//▓▓▓▓
+				// ▓ ▓
+				{
+						   {1,0}, {2,0}, {3,0}, 			  {-1,-1},
+					{0,1}, {1,1}, {2,1},                      {3,-2},
+					{0,2}, {1,2}, {2,2}, {3,2}, 
+						   {1,3}, 		 {3,3},               {-1,-4},{-3,-4}
+				},
+				//▓▓▓
+				//▒▓▓▓
+				//▓▓▓▓
+				//▓▓▓▓
+				//▓ ▓
+				{
+					{0,0}, {1,0}, {2,0},							{-4,-1},
+						   {1,1}, {2,1}, {3,1},						{0,-2},
+					{0,2}, {1,2}, {2,2}, {3,2},
+					{0,3}, {1,3}, {2,3}, {3,3},
+					{0,4},		  {2,4},							{-2,-4},{-4,-5}
+				},
+				//▓▓▓
+				//▒▓▓▓
+				//▓▓▓▓
+				//▓▓▓
+				//▓ ▓
+				{
+					{0,0}, {1,0}, {2,0},					{-4,-1},
+						   {1,1}, {2,1}, {3,1},				{0,-2}, {1,-2},
+					{0,2}, {1,2}, {2,2}, {3,2},
+					{0,3}, {1,3}, {2,3},					{-4,-4},
+					{0,4},		  {2,4},					{-2,-5},{-4,-5}
+				},
+				//▓▓▓
+				//▒▓▓▓
+				//▓▓▓▓
+				//▓ ▓
+				{
+					{0,0}, {1,0}, {2,0},               	{-4,-1},
+						   {1,1}, {2,1}, {3,1},			{0,-2}, {1,-2},
+					{0,2}, {1,2}, {2,2}, {3,2},
+					{0,3},		  {2,3},				{-2,-4},{-4,-4}
+				}
 		
 	};
 	protected BufferedImage bi;
@@ -136,7 +204,7 @@ public abstract class Detector{
 	 * @return true if it equals the pattern
 	 */
 	protected boolean detect(int offsetX, int offsetY, int[][] positions, BufferedImage in) {
-		return detect(offsetX, offsetY, positions, in, 1);
+		return detect(offsetX, offsetY, positions, in, 3);
 	}
 	/**
 	 * Detects the pattern in a patch of the image
@@ -161,15 +229,11 @@ public abstract class Detector{
 			if(new Color(color).equals(detected))return false;
 			for(int[] i : positions) {
 				if((i[0] >= 0 && i[1] >= 0 && in.getRGB(i[0]+offsetX, i[1]+offsetY) != color)) {
-					if(offsetX == 2090 && offsetY == 1066)
-						System.err.println(i[0] + "," + i[1] + " (" +in.getRGB(i[0]+offsetX, i[1]+offsetY) + "), ("+color+")");
 					error--;
 				}else if(
 					(i[0] <  0 && i[1] >= 0 && in.getRGB(-i[0] - 1 + offsetX, i[1] + offsetY) == color) ||
 					(i[1] <  0 && i[0] >= 0 && in.getRGB(i[0] + offsetX, -i[1] - 1 + offsetY) == color) ||
 					(i[0] <  0 && i[1] <  0 && in.getRGB(-i[0] - 1 + offsetX, -i[1] - 1 +offsetY) == color)) {
-					if(offsetX == 2090 && offsetY == 1066)
-						System.err.println("a "+i[0] + "," + i[1]);
 					return false;
 				}
 				if(error == -1)return false;
