@@ -204,7 +204,7 @@ public abstract class Detector{
 	 * @return true if it equals the pattern
 	 */
 	protected boolean detect(int offsetX, int offsetY, int[][] positions, BufferedImage in) {
-		return detect(offsetX, offsetY, positions, in, 3);
+		return detect(offsetX, offsetY, positions, in, 1);
 	}
 	/**
 	 * Detects the pattern in a patch of the image
