@@ -19,9 +19,12 @@ public class Exporter extends Detector{
 		@SuppressWarnings("serial")
 		int choice = chooser.showOpenDialog(new Component() {});
 		if (choice != JFileChooser.APPROVE_OPTION) return;
-		File chosenFile = chooser.getSelectedFile();
-		System.out.println(chosenFile.getAbsolutePath());
-		File outputfile = new File(chosenFile.getAbsolutePath() + "/" + JOptionPane.showInputDialog("Name of the file")+".png");
+		File chosenFolder = chooser.getSelectedFile();
+		System.out.println(chosenFolder.getAbsolutePath());
+		String chosenFile = JOptionPane.showInputDialog("Name of the file");
+		if(chosenFile == null || chosenFile.strip().equals(""))
+			return;
+		File outputfile = new File(chosenFolder.getAbsolutePath() + "/" + chosenFile +".png");
 		try {
 			//outputfile.createNewFile();
 			boolean a = ImageIO.write(detectAndGen(), "png", outputfile);
