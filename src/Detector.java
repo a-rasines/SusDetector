@@ -5,8 +5,11 @@ public abstract class Detector{
 	public int count = 0;
 	
 	/**
-	 * To configure a new pattern: Relative pixels with y > 0 must match the color of the rest of the pixels with y > 0.
-	 * Relative pixels with -(y) must be a color different to the pixels with y > 0
+	 * To configure a new pattern: Relative pixels with both axis positive must match the color of the rest of the pixels with both axis positive.
+	 * Negative axis work like this: axis = -(value + 1) and mean that that pixel must not be the same color as the rest.
+	 * If only one axis is negative that's primary pixel, so if the pixel does not comply the condition, the pattern it's discarded
+	 * If both axis are negative, the non complyant pixel will add to the error count 
+	 * 
 	 */
 	public final int[][][] AMONGUS_TYPES = {
 		// ▓▓▓
