@@ -89,62 +89,62 @@ public abstract class Detector{
 		{0,3}, {1,3}, {2,3}, {3,3},
 			   {1,4}, 		 {3,4},			  {-1,-5},{-3,-5}
 		},
-				// ▓▓▓
-				//▓▓▓▒
-				//▓▓▓▓
-				// ▓▓▓
-				// ▓ ▓
-				{
-						   {1,0}, {2,0}, {3,0}, 			   {-1,-1},                
-					{0,1}, {1,1}, {2,1},                       {3,-2},
-					{0,2}, {1,2}, {2,2}, {3,2}, 
-						   {1,3}, {2,3}, {3,3}, 			   {-1,-4},
-						   {1,4}, 		 {3,4},				   {-1,-5},{-3,-5}
-				},
-				// ▓▓▓
-				//▓▓▓▒
-				//▓▓▓▓
-				// ▓ ▓
-				{
-						   {1,0}, {2,0}, {3,0}, 			  {-1,-1},
-					{0,1}, {1,1}, {2,1},                      {3,-2},
-					{0,2}, {1,2}, {2,2}, {3,2}, 
-						   {1,3}, 		 {3,3},               {-1,-4},{-3,-4}
-				},
-				//▓▓▓
-				//▒▓▓▓
-				//▓▓▓▓
-				//▓▓▓▓
-				//▓ ▓
-				{
-					{0,0}, {1,0}, {2,0},							{-4,-1},
-						   {1,1}, {2,1}, {3,1},						{0,-2},
-					{0,2}, {1,2}, {2,2}, {3,2},
-					{0,3}, {1,3}, {2,3}, {3,3},
-					{0,4},		  {2,4},							{-2,-4},{-4,-5}
-				},
-				//▓▓▓
-				//▒▓▓▓
-				//▓▓▓▓
-				//▓▓▓
-				//▓ ▓
-				{
-					{0,0}, {1,0}, {2,0},					{-4,-1},
-						   {1,1}, {2,1}, {3,1},				{0,-2}, {1,-2},
-					{0,2}, {1,2}, {2,2}, {3,2},
-					{0,3}, {1,3}, {2,3},					{-4,-4},
-					{0,4},		  {2,4},					{-2,-5},{-4,-5}
-				},
-				//▓▓▓
-				//▒▓▓▓
-				//▓▓▓▓
-				//▓ ▓
-				{
-					{0,0}, {1,0}, {2,0},               	{-4,-1},
-						   {1,1}, {2,1}, {3,1},			{0,-2}, {1,-2},
-					{0,2}, {1,2}, {2,2}, {3,2},
-					{0,3},		  {2,3},				{-2,-4},{-4,-4}
-				}
+		// ▓▓▓
+		//▓▓▓▒
+		//▓▓▓▓
+		// ▓▓▓
+		// ▓ ▓
+		{
+				   {1,0}, {2,0}, {3,0}, 			   {-1,-1},                
+			{0,1}, {1,1}, {2,1},                       {3,-2},
+			{0,2}, {1,2}, {2,2}, {3,2}, 
+				   {1,3}, {2,3}, {3,3}, 			   {-1,-4},
+				   {1,4}, 		 {3,4},				   {-1,-5},{-3,-5}
+		},
+		// ▓▓▓
+		//▓▓▓▒
+		//▓▓▓▓
+		// ▓ ▓
+		{
+				   {1,0}, {2,0}, {3,0}, 			  {-1,-1},
+			{0,1}, {1,1}, {2,1},                      {3,-2},
+			{0,2}, {1,2}, {2,2}, {3,2}, 
+				   {1,3}, 		 {3,3},               {-1,-4},{-3,-4}
+		},
+		//▓▓▓
+		//▒▓▓▓
+		//▓▓▓▓
+		//▓▓▓▓
+		//▓ ▓
+		{
+			{0,0}, {1,0}, {2,0},							{-4,-1},
+				   {1,1}, {2,1}, {3,1},						{0,-2},
+			{0,2}, {1,2}, {2,2}, {3,2},
+			{0,3}, {1,3}, {2,3}, {3,3},
+			{0,4},		  {2,4},							{-2,-4},{-4,-5}
+		},
+		//▓▓▓
+		//▒▓▓▓
+		//▓▓▓▓
+		//▓▓▓
+		//▓ ▓
+		{
+			{0,0}, {1,0}, {2,0},					{-4,-1},
+				   {1,1}, {2,1}, {3,1},				{0,-2}, {1,-2},
+			{0,2}, {1,2}, {2,2}, {3,2},
+			{0,3}, {1,3}, {2,3},					{-4,-4},
+			{0,4},		  {2,4},					{-2,-5},{-4,-5}
+		},
+		//▓▓▓
+		//▒▓▓▓
+		//▓▓▓▓
+		//▓ ▓
+		{
+			{0,0}, {1,0}, {2,0},               	{-4,-1},
+				   {1,1}, {2,1}, {3,1},			{0,-2}, {1,-2},
+			{0,2}, {1,2}, {2,2}, {3,2},
+			{0,3},		  {2,3},				{-2,-4},{-4,-4}
+		}
 		
 	};
 	protected BufferedImage bi;
@@ -217,28 +217,43 @@ public abstract class Detector{
 	 */
 	protected boolean detect(int offsetX, int offsetY, int[][] positions, BufferedImage in, int error) {
 		try {
-			int color;
-			getcolor: {
-				for(int[] pos : positions)
-					if(pos[0] >= 0 && pos[1] >= 0) {
-						color = in.getRGB(offsetX + pos[0], offsetY + pos[1]);
-						break getcolor;
-					}
-				return false;
-			}
-			if(new Color(color).equals(detected))return false;
-			for(int[] i : positions) {
-				if((i[0] >= 0 && i[1] >= 0 && in.getRGB(i[0]+offsetX, i[1]+offsetY) != color)) {
-					error--;
-				}else if(
-					(i[0] <  0 && i[1] >= 0 && in.getRGB(-i[0] - 1 + offsetX, i[1] + offsetY) == color) ||
-					(i[1] <  0 && i[0] >= 0 && in.getRGB(i[0] + offsetX, -i[1] - 1 + offsetY) == color) ||
-					(i[0] <  0 && i[1] <  0 && in.getRGB(-i[0] - 1 + offsetX, -i[1] - 1 +offsetY) == color)) {
+			for(int _offset = 0; _offset <= error; _offset++) {
+				int color;
+				int offset = _offset;
+				getcolor: {
+					for(int[] pos : positions)
+						if(pos[0] < 0 && pos[1] < 0) {
+							offset++;
+							break getcolor;
+						}
 					return false;
 				}
-				if(error == -1)return false;
+				color = in.getRGB(offsetX + positions[offset][0], offsetY + positions[offset][1]);
+				if(new Color(color).equals(detected))return false;
+				if(offsetX == 2400 && offsetY == 416)
+					System.out.println("enter");
+				checkLoop: {
+					for(int[] i : positions) {
+						if((i[0] >= 0 && i[1] >= 0 && in.getRGB(i[0]+offsetX, i[1]+offsetY) != color) ||
+						   (i[0] <  0 && i[1] <  0 && in.getRGB(-i[0] - 1 + offsetX, -i[1] - 1 +offsetY) == color)
+						) {
+							if(offsetX == 2400 && offsetY == 416)
+								System.err.println("e " + i[0] + " " + i[1]);
+							error--;
+						}else if(
+							(i[0] <  0 && i[1] >= 0 && in.getRGB(-i[0] - 1 + offsetX, i[1] + offsetY) == color) ||
+							(i[1] <  0 && i[0] >= 0 && in.getRGB(i[0] + offsetX, -i[1] - 1 + offsetY) == color)) {
+							if(offsetX == 2400 && offsetY == 416)
+								System.err.println("d " + i[0] + " " + i[1]);
+							break checkLoop;
+						}
+						if(error == -1)break checkLoop;
+					}
+					return true;
+				}
+				
 			}
-			return true;
+			return false;
 		}catch(ArrayIndexOutOfBoundsException e) {
 			return false;
 		}
