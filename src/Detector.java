@@ -233,21 +233,21 @@ public abstract class Detector{
 				}
 				color = in.getRGB(offsetX + positions[offset][0], offsetY + positions[offset][1]);
 				if(new Color(color).equals(detected))return false;
-				if(offsetX == 2400 && offsetY == 416)
-					System.out.println("enter");
+//				if(offsetX == 2400 && offsetY == 416)
+//					System.out.println("enter");
 				checkLoop: {
 					for(int[] i : positions) {
 						if((i[0] >= 0 && i[1] >= 0 && in.getRGB(i[0]+offsetX, i[1]+offsetY) != color) ||
 						   (i[0] <  0 && i[1] <  0 && in.getRGB(-i[0] - 1 + offsetX, -i[1] - 1 +offsetY) == color)
 						) {
-							if(offsetX == 2400 && offsetY == 416)
-								System.err.println("e " + i[0] + " " + i[1]);
+//							if(offsetX == 2400 && offsetY == 416)
+//								System.err.println("e " + i[0] + " " + i[1]);
 							error--;
 						}else if(
 							(i[0] <  0 && i[1] >= 0 && in.getRGB(-i[0] - 1 + offsetX, i[1] + offsetY) == color) ||
 							(i[1] <  0 && i[0] >= 0 && in.getRGB(i[0] + offsetX, -i[1] - 1 + offsetY) == color)) {
-							if(offsetX == 2400 && offsetY == 416)
-								System.err.println("d " + i[0] + " " + i[1]);
+//							if(offsetX == 2400 && offsetY == 416)
+//								System.err.println("d " + i[0] + " " + i[1]);
 							break checkLoop;
 						}
 						if(error == -1)break checkLoop;
